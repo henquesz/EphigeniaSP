@@ -1,0 +1,250 @@
+/* ==========================================================================
+   Página principal com a cena em three.js. Só o que muda em relação ao globals.css.
+   ========================================================================== */
+
+.tresd {
+  position: relative;
+  isolation: isolate;
+}
+
+/* ---------- canvas ---------- */
+
+.cena {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: -2;
+  height: 100vh;
+  /* altura da tela sem a barra do navegador: o canvas não pula quando ela some */
+  height: 100lvh;
+  background: var(--preto);
+  pointer-events: none;
+}
+
+.cena__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.8s;
+}
+
+.tresd[data-cena='pronta'] .cena__canvas {
+  opacity: 1;
+}
+
+.cena__reserva {
+  display: none;
+}
+
+.tresd[data-cena='falhou'] .cena__reserva {
+  position: absolute;
+  inset: 12% 0 0;
+  display: block;
+  width: 100%;
+  height: 88%;
+}
+
+/* O shader já tem granulado próprio */
+body:has(> .tresd) .grain {
+  display: none;
+}
+
+/* Linhas finas da faixa central do flyer */
+.guias {
+  position: fixed;
+  inset: 0 auto 0 50%;
+  z-index: -1;
+  width: min(38vw, 620px);
+  border-inline: 1px solid rgba(236, 229, 218, 0.07);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* O menu não vira uma barra opaca: só um degradê, para não cortar a cena */
+.tresd .nav[data-rolou] {
+  background: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-bottom-color: transparent;
+}
+
+.tresd .nav::before,
+.tresd .nav[data-rolou]::before {
+  inset: 0 0 -56px;
+  background: linear-gradient(rgba(10, 9, 9, 0.92), rgba(10, 9, 9, 0.66) 50%, rgba(10, 9, 9, 0));
+  /* o que passa por trás do menu desfoca e some aos poucos */
+  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(9px);
+  -webkit-mask-image: linear-gradient(#000 52%, transparent);
+  mask-image: linear-gradient(#000 52%, transparent);
+  opacity: 1;
+}
+
+.tresd .nav__link {
+  color: #cfc6bc;
+}
+
+/* Vermelho um pouco mais claro: aqui o fundo também tem luz vermelha */
+.tresd .ato .canto,
+.tresd .footer .canto {
+  color: #ff7169;
+}
+
+/* ---------- atos ---------- */
+
+.ato {
+  position: relative;
+  min-height: 100svh;
+}
+
+/* Sobra rolagem para o texto ficar parado enquanto a câmera anda */
+.ato--longo {
+  min-height: 165svh;
+}
+
+.ato__conteudo {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(18px, 2.2vw, 32px);
+  min-height: 100svh;
+  padding: calc(var(--nav-h) + 24px) var(--gutter) clamp(32px, 6vh, 72px);
+}
+
+.ato--topo .ato__conteudo {
+  position: relative;
+  padding: 0;
+}
+
+.ato__conteudo--esq {
+  align-items: flex-start;
+  padding-right: 46vw;
+}
+
+.ato__conteudo--dir {
+  align-items: flex-start;
+  padding-left: 58vw;
+}
+
+.ato__manifesto,
+.ato__titulo {
+  font-family: var(--display);
+  font-weight: 300;
+  line-height: 0.96;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.ato__manifesto {
+  font-size: clamp(2.5rem, 5vw, 6rem);
+}
+
+.ato__titulo {
+  font-size: clamp(3rem, 7.2vw, 8.4rem);
+  line-height: 0.92;
+}
+
+.ato__titulo--grande {
+  font-size: clamp(4.2rem, 11vw, 12.5rem);
+  line-height: 0.86;
+}
+
+.ato__texto {
+  max-width: 36ch;
+  font-size: 1.125rem;
+  color: #c4bbb1;
+}
+
+.ato__infos {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 20px clamp(24px, 3vw, 56px);
+  margin-top: clamp(8px, 1.6vw, 24px);
+}
+
+.ato__infos dt {
+  margin-bottom: 6px;
+}
+
+.ato__infos dd {
+  max-width: 24ch;
+}
+
+/* Estado inicial da entrada (com JS e movimento liberado), com rede de segurança */
+@media (prefers-reduced-motion: no-preference) {
+  .js .ato--topo [data-ch],
+  .js .ato--topo [data-intro] {
+    opacity: 0;
+    animation: seguranca 0s 5s forwards;
+  }
+}
+
+/* ---------- seções reaproveitadas, agora transparentes ---------- */
+
+.tresd .agenda {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 9, 9, 0) 0%,
+    rgba(10, 9, 9, 0.72) 14%,
+    rgba(10, 9, 9, 0.72) 86%,
+    rgba(10, 9, 9, 0) 100%
+  );
+}
+
+/* Com a cena pronta, o vermelho vem do canvas e o busto aparece dentro dele */
+.tresd[data-cena='pronta'] .cardapio {
+  background: transparent;
+}
+
+.tresd .footer {
+  border-top: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 9, 9, 0.2),
+    rgba(10, 9, 9, 0.55) 45%,
+    rgba(10, 9, 9, 0.2)
+  );
+}
+
+.tresd .footer__marca-txt {
+  color: rgba(120, 14, 18, 0.72);
+}
+
+/* ---------- celular ---------- */
+
+@media (max-width: 860px) {
+  .guias {
+    width: 40vw;
+  }
+
+  .ato__conteudo,
+  .ato__conteudo--esq,
+  .ato__conteudo--dir {
+    justify-content: flex-end;
+    padding-inline: var(--gutter);
+  }
+
+  /* Escurece a base para o texto ficar legível sobre o busto */
+  .ato--longo .ato__conteudo::before {
+    content: '';
+    position: absolute;
+    inset: 38% 0 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(10, 9, 9, 0), rgba(10, 9, 9, 0.86) 55%);
+    pointer-events: none;
+  }
+
+  .ato__infos {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ato--longo {
+    min-height: 100svh;
+  }
+}

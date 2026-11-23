@@ -1,0 +1,1327 @@
+/* ==========================================================================
+   Ephigenia
+   ========================================================================== */
+
+:root {
+  --preto: #0a0909;
+  --carvao: #131010;
+  --vermelho: #d4161c;
+  --vermelho-hover: #ef2b31;
+  /* Texto pequeno em vermelho sobre preto/carvão: o #d4161c fica em 3,7:1;
+     o tom do hover passa de 4,5:1 (WCAG AA). */
+  --vermelho-texto: #ef2b31;
+  --vinho: #4a0a0c;
+  --creme: #ece5da;
+  --cinza: #a39a91;
+  --cinza-escuro: #6b635d;
+  --linha: rgba(236, 229, 218, 0.12);
+  /* Texto pequeno sobre o vermelho (o creme da marca fica em 4,3:1 ali). */
+  --sobre-vermelho: #fdfaf5;
+
+  --display: var(--font-imbue), 'Times New Roman', serif;
+  --sans: var(--font-host), ui-sans-serif, sans-serif;
+  --mono: var(--font-fragment), ui-monospace, monospace;
+
+  --gutter: clamp(16px, 3.6vw, 64px);
+  --nav-h: 72px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  color-scheme: dark;
+}
+
+/* ---------- base ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--preto);
+  color: var(--creme);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+img,
+svg,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 400;
+}
+
+address {
+  font-style: normal;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--vermelho);
+  color: var(--sobre-vermelho);
+}
+
+:focus-visible {
+  outline: 2px solid var(--creme);
+  outline-offset: 4px;
+}
+
+[tabindex='-1']:focus {
+  outline: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip {
+  position: fixed;
+  top: 12px;
+  left: 16px;
+  z-index: 100;
+  padding: 10px 16px;
+  background: var(--creme);
+  color: var(--preto);
+  font-weight: 600;
+  transform: translateY(-200%);
+}
+
+.skip:focus {
+  transform: none;
+}
+
+.wrap {
+  width: min(100% - 2 * var(--gutter), 1480px);
+  margin-inline: auto;
+}
+
+/* Granulado por cima de tudo, como o do flyer */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  will-change: transform;
+  animation: grao 0.9s steps(5) infinite;
+}
+
+@keyframes grao {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-4%, 3%);
+  }
+  40% {
+    transform: translate(3%, -5%);
+  }
+  60% {
+    transform: translate(-6%, -2%);
+  }
+  80% {
+    transform: translate(5%, 4%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* ---------- tipografia ---------- */
+
+.titulo {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(3.4rem, 9.6vw, 10.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* Legenda de canto em caixa alta, como "20 DE NOVEMBRO" no flyer */
+.canto {
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vermelho-texto);
+}
+
+.canto--dir {
+  text-align: right;
+}
+
+.canto__link {
+  display: inline-grid;
+  gap: 4px;
+  transition: opacity 0.3s;
+}
+
+.canto__link:hover {
+  opacity: 0.75;
+}
+
+.canto__forte {
+  display: block;
+}
+
+.canto__fraco {
+  display: block;
+  color: var(--cinza);
+  font-size: 0.85em;
+}
+
+.cantos {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: clamp(48px, 7vw, 104px);
+}
+
+/* Letras de <Letras>, separadas para as animações de entrada */
+.pt__w {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.pt__ch {
+  display: inline-block;
+}
+
+/* ---------- botões e links ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7em;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 2px;
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 0.76rem;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    background-color 0.25s,
+    color 0.25s;
+}
+
+.btn__arrow {
+  flex: none;
+  transition: transform 0.35s var(--ease);
+}
+
+.btn:hover .btn__arrow {
+  transform: translate(3px, -3px);
+}
+
+.btn--red {
+  background: var(--vermelho);
+  color: var(--sobre-vermelho);
+}
+
+/* No vermelho claro do hover, só o texto escuro passa de 4,5:1. */
+.btn--red:hover {
+  background: var(--vermelho-hover);
+  color: var(--preto);
+}
+
+.btn--preto {
+  background: var(--preto);
+  color: var(--creme);
+}
+
+.btn--preto:hover {
+  background: var(--creme);
+  color: var(--preto);
+}
+
+.btn--off {
+  border: 1px solid var(--linha);
+  color: var(--cinza);
+  cursor: not-allowed;
+}
+
+.btn--sm {
+  min-height: 42px;
+  padding: 0 18px;
+  font-size: 0.74rem;
+}
+
+.btn--lg {
+  min-height: 72px;
+  padding: 0 36px;
+  font-size: 0.92rem;
+}
+
+.magnetic {
+  display: inline-block;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding-bottom: 2px;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px
+    no-repeat;
+  transition:
+    background-size 0.5s var(--ease),
+    color 0.3s;
+}
+
+.link:hover {
+  color: var(--vermelho-hover);
+  background-position: 100% 100%;
+  background-size: 0% 1px;
+}
+
+.link__arrow {
+  flex: none;
+  font-size: 0.85em;
+}
+
+/* ---------- nav ---------- */
+
+.nav {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 60;
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color 0.4s,
+    border-color 0.4s,
+    backdrop-filter 0.4s;
+}
+
+.nav::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 -48px;
+  background: linear-gradient(rgba(10, 9, 9, 0.8), rgba(10, 9, 9, 0));
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+
+.nav[data-rolou]::before {
+  opacity: 0;
+}
+
+.nav[data-rolou] {
+  background: rgba(10, 9, 9, 0.72);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  border-bottom-color: var(--linha);
+}
+
+.nav__inner {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  height: var(--nav-h);
+  padding-inline: var(--gutter);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  justify-self: start;
+}
+
+.logo__mark {
+  width: 18px;
+  height: 18px;
+  color: var(--vermelho);
+}
+
+.logo__word {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.75rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.nav__links {
+  display: flex;
+  gap: clamp(22px, 2.8vw, 44px);
+}
+
+/* Texto que rola para cima no hover */
+.nav__link {
+  display: inline-block;
+  height: 1.25em;
+  overflow: hidden;
+  font-size: 0.95rem;
+  line-height: 1.25;
+  color: var(--cinza);
+}
+
+.nav__link-txt {
+  display: block;
+  text-shadow: 0 1.25em 0 var(--creme);
+  transition: transform 0.45s var(--ease);
+}
+
+.nav__link:hover .nav__link-txt,
+.nav__link:focus-visible .nav__link-txt {
+  transform: translateY(-1.25em);
+}
+
+.nav__acoes {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  justify-self: end;
+}
+
+.nav__toggle {
+  display: none;
+  min-height: 42px;
+  padding: 0 4px;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  padding: calc(var(--nav-h) + 24px) var(--gutter) 48px;
+  background: var(--vermelho);
+  color: var(--preto);
+}
+
+.menu ul {
+  display: grid;
+  gap: 4px;
+}
+
+.menu__item {
+  overflow: hidden;
+}
+
+.menu__link {
+  display: block;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(3.6rem, 18vw, 7.5rem);
+  line-height: 0.95;
+}
+
+.menu__link:focus-visible {
+  outline-color: var(--preto);
+}
+
+/* ---------- indicador de seções (flyer) ---------- */
+
+.dots {
+  position: fixed;
+  top: 50%;
+  left: 12px;
+  z-index: 50;
+  color: var(--vermelho-texto);
+  transform: translateY(-50%);
+  transition: color 0.4s;
+}
+
+.dots ul {
+  display: grid;
+  gap: 8px;
+}
+
+.dots__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px;
+}
+
+.dots__fill {
+  fill: transparent;
+  transition: fill 0.3s;
+}
+
+.dots__item[aria-current] .dots__fill {
+  fill: var(--vermelho);
+}
+
+.dots__item[aria-current] svg {
+  color: var(--creme);
+}
+
+.dots__label {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition:
+    opacity 0.3s,
+    transform 0.3s var(--ease);
+}
+
+.dots__item:hover .dots__label,
+.dots__item:focus-visible .dots__label {
+  opacity: 1;
+  transform: none;
+}
+
+.dots--sobre-vermelho {
+  color: var(--preto);
+}
+
+.dots--sobre-vermelho .dots__item[aria-current] .dots__fill {
+  fill: var(--preto);
+}
+
+.dots--sobre-vermelho .dots__item[aria-current] svg {
+  color: var(--sobre-vermelho);
+}
+
+/* ---------- hero (composição do flyer) ---------- */
+
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 640px;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--preto);
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Seletor mais forte que .light-rays/.gradient-ascii-container, que são relative */
+.hero__bg > .hero__ascii,
+.hero__bg > .hero__raios {
+  position: absolute;
+  inset: 0;
+}
+
+/* Faixa central mais clara, com linhas finas nas bordas */
+.hero__coluna {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: min(38vw, 620px);
+  transform: translateX(-50%);
+  border-inline: 1px solid rgba(236, 229, 218, 0.07);
+  background: linear-gradient(
+    180deg,
+    rgba(236, 229, 218, 0.03),
+    rgba(236, 229, 218, 0) 75%
+  );
+}
+
+.hero__raios {
+  mix-blend-mode: screen;
+}
+
+/* ===== Tamanho e posição do busto =====
+   --busto-tamanho  1 = ocupa a altura do hero abaixo do menu; 1.2 = 20% maior; 0.8 = menor
+   --busto-x        desloca para os lados (negativo = esquerda). Ex.: -120px, 6vw
+   --busto-y        desloca na vertical (positivo = desce e corta mais embaixo). Ex.: 60px
+   O busto fica sempre alinhado embaixo e no centro desta caixa. */
+.hero__busto {
+  --busto-tamanho: 1.4;
+  --busto-x: 0px;
+  --busto-y: 0px;
+
+  position: absolute;
+  bottom: -300;
+  left: 50%;
+  z-index: 1;
+  width: calc(100% * var(--busto-tamanho));
+  height: calc((100% - var(--nav-h) - 4px) * var(--busto-tamanho));
+  /* `translate` em vez de `transform`: o GSAP já anima o transform na rolagem */
+  translate: calc(-50% + var(--busto-x)) var(--busto-y);
+}
+
+.hero__cantos {
+  position: absolute;
+  top: calc(var(--nav-h) + clamp(16px, 3.5vh, 40px));
+  right: var(--gutter);
+  left: var(--gutter);
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  pointer-events: none;
+}
+
+.hero__cantos a {
+  pointer-events: auto;
+}
+
+.hero__titulo {
+  position: absolute;
+  top: 50%;
+  right: var(--gutter);
+  left: var(--gutter);
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 4vw;
+  transform: translateY(-50%);
+  font-family: var(--display);
+  font-weight: 300;
+  /* Imbue condensada: "Ephigenia" mede ~2,5em e "Centro" ~1,6em; em 11vw ficam sobre os ombros, como no flyer */
+  font-size: clamp(4rem, 11vw, 13.5rem);
+  line-height: 0.9;
+  color: var(--creme);
+  text-shadow: 0 0 50px rgba(10, 9, 9, 0.6);
+  pointer-events: none;
+}
+
+.hero__nome {
+  display: block;
+  white-space: nowrap;
+}
+
+.hero__dir {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.hero__origem {
+  margin-top: 0.1em;
+  font-size: 0.3em;
+}
+
+/* Estado inicial da entrada (só com JS e com movimento liberado).
+   A animação de segurança garante o texto visível se o JS travar. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .hero [data-ch],
+  .js .hero [data-intro] {
+    opacity: 0;
+    animation: seguranca 0s 4.5s forwards;
+  }
+}
+
+@keyframes seguranca {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- componentes do React Bits ---------- */
+
+.gradient-ascii-container,
+.light-rays {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.light-rays {
+  pointer-events: none;
+}
+
+.gradient-ascii-canvas,
+.light-rays__canvas,
+.halftone-bust__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.halftone-bust {
+  overflow: hidden;
+}
+
+.halftone-bust__fallback {
+  display: none;
+}
+
+.halftone-bust[data-fallback] .halftone-bust__canvas {
+  display: none;
+}
+
+.halftone-bust[data-fallback] .halftone-bust__fallback {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- seções ---------- */
+
+.sec {
+  position: relative;
+  padding-block: clamp(96px, 12vw, 180px);
+}
+
+/* ---------- a casa ---------- */
+
+.manifesto {
+  max-width: 15em;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(2.6rem, 6.2vw, 6.8rem);
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.casa__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.55fr);
+  align-items: end;
+  gap: 32px 64px;
+  margin: clamp(96px, 12vw, 180px) 0 clamp(40px, 5vw, 72px);
+}
+
+.casa__texto,
+.agenda__nota {
+  max-width: 38ch;
+  justify-self: end;
+  font-size: 1.125rem;
+  color: var(--cinza);
+}
+
+.andar {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) minmax(0, 22rem);
+  align-items: end;
+  gap: 16px 40px;
+  padding-block: clamp(28px, 4vw, 56px);
+}
+
+.andar__linha {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: var(--linha);
+}
+
+.andar__nivel {
+  align-self: start;
+  padding-top: 1.2em;
+}
+
+.andar__nome {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(4.4rem, 13vw, 14rem);
+  line-height: 0.9;
+}
+
+.andar__texto {
+  padding-bottom: 0.6em;
+  font-size: 1.0625rem;
+  color: var(--cinza);
+}
+
+.infos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px 40px;
+  margin-top: clamp(56px, 7vw, 104px);
+  padding-top: 28px;
+  border-top: 1px solid var(--linha);
+}
+
+.infos dt {
+  margin-bottom: 10px;
+}
+
+.infos dd {
+  font-size: 1.0625rem;
+}
+
+/* ---------- agenda ---------- */
+
+.agenda {
+  background: var(--carvao);
+}
+
+.agenda__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr);
+  align-items: end;
+  gap: 28px 64px;
+  margin-bottom: clamp(48px, 6vw, 88px);
+}
+
+.carrossel {
+  margin-bottom: clamp(64px, 8vw, 120px);
+  overflow: hidden;
+}
+
+.carrossel__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.carrossel__grupo {
+  display: flex;
+  gap: clamp(14px, 1.6vw, 26px);
+  padding-right: clamp(14px, 1.6vw, 26px);
+}
+
+.card {
+  width: clamp(280px, 34vw, 580px);
+  flex: none;
+}
+
+.card__link {
+  display: block;
+}
+
+.card__img {
+  position: relative;
+  display: block;
+  aspect-ratio: 1400 / 733;
+  overflow: hidden;
+  background: var(--preto);
+}
+
+.card__img img {
+  object-fit: cover;
+  filter: grayscale(0.3) contrast(1.05);
+  transition:
+    transform 1.2s var(--ease),
+    filter 0.6s;
+}
+
+.card__link:hover .card__img img,
+.card__link:focus-visible .card__img img {
+  transform: scale(1.05);
+  filter: none;
+}
+
+.card__data {
+  display: block;
+  margin-top: 16px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vermelho-texto);
+}
+
+.card__titulo {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 2.4vw, 2.3rem);
+  line-height: 1;
+}
+
+.eventos {
+  border-top: 1px solid var(--linha);
+}
+
+.evento {
+  position: relative;
+  display: grid;
+  grid-template-columns: 9rem 6rem minmax(0, 1fr) 8rem auto;
+  grid-template-areas: 'data tipo info hora acao';
+  align-items: center;
+  gap: 16px clamp(16px, 3vw, 40px);
+  padding-block: clamp(24px, 3vw, 36px);
+  border-bottom: 1px solid var(--linha);
+  overflow: hidden;
+}
+
+.evento__data {
+  grid-area: data;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.evento__dia {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(3.8rem, 6.2vw, 6rem);
+  line-height: 0.85;
+}
+
+.evento__mes {
+  display: grid;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cinza);
+}
+
+.evento__mes span:first-child {
+  color: var(--creme);
+}
+
+.evento__tipo {
+  grid-area: tipo;
+}
+
+.evento__info {
+  grid-area: info;
+  min-width: 0;
+}
+
+.evento__titulo {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2rem, 3.4vw, 3.3rem);
+  line-height: 1;
+}
+
+.evento__lineup {
+  margin-top: 8px;
+  color: var(--cinza);
+}
+
+.evento__hora {
+  grid-area: hora;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.evento__acao {
+  position: relative;
+  z-index: 2;
+  grid-area: acao;
+  justify-self: end;
+}
+
+/* Linha vermelha que cresce na base no hover */
+.evento::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: var(--vermelho);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease);
+}
+
+.evento:hover::after,
+.evento:focus-within::after {
+  transform: scaleX(1);
+}
+
+.agenda__vazia {
+  padding-top: 32px;
+  border-top: 1px solid var(--linha);
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.2;
+}
+
+/* ---------- cardápio ---------- */
+
+.cardapio {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: clamp(64px, 7vw, 104px);
+  background: var(--vermelho);
+  color: var(--preto);
+}
+
+/* Pontos animados que somem da direita para a esquerda */
+.cardapio__dots {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: linear-gradient(
+    to left,
+    #000 0%,
+    rgba(0, 0, 0, 0.55) 40%,
+    transparent 85%
+  );
+  mask-image: linear-gradient(
+    to left,
+    #000 0%,
+    rgba(0, 0, 0, 0.55) 40%,
+    transparent 85%
+  );
+}
+
+.cardapio .canto {
+  color: var(--sobre-vermelho);
+}
+
+/* Título numa coluna, texto e botão na outra */
+.cardapio__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+  align-items: end;
+  column-gap: clamp(32px, 6vw, 96px);
+}
+
+.cardapio__inner .cantos {
+  grid-column: 1 / -1;
+  margin-bottom: clamp(28px, 4vw, 56px);
+}
+
+.cardapio__titulo {
+  margin-left: -0.04em;
+  /* descendente do "p" */
+  padding-bottom: 0.18em;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(4.5rem, 12vw, 11rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.cardapio__base {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 0.9em;
+  padding-top: 24px;
+}
+
+.cardapio__linha {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: rgba(10, 9, 9, 0.4);
+}
+
+.cardapio__texto {
+  max-width: 22ch;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(1.6rem, 2.2vw, 2.2rem);
+  line-height: 1.1;
+  color: var(--sobre-vermelho);
+}
+
+.cardapio .btn:focus-visible {
+  outline-color: var(--preto);
+}
+
+/* ---------- footer ---------- */
+
+.footer {
+  position: relative;
+  overflow: hidden;
+  padding-top: clamp(96px, 11vw, 160px);
+  border-top: 1px solid var(--linha);
+  background:
+    radial-gradient(
+      120% 55% at 50% 100%,
+      rgba(74, 10, 12, 0.6),
+      transparent 70%
+    ),
+    var(--preto);
+}
+
+.footer__cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px;
+}
+
+.footer__col {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 10px;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.rotulo {
+  margin-bottom: 6px;
+}
+
+.footer__marca {
+  margin-top: clamp(64px, 9vw, 140px);
+  padding-inline: var(--gutter);
+  container-type: inline-size;
+}
+
+.footer__marca-txt {
+  font-family: var(--display);
+  font-weight: 300;
+  /* "ephigenia" mede 2,5em na Imbue: 38cqi ocupa ~95% da largura */
+  font-size: 38cqi;
+  line-height: 0.82;
+  letter-spacing: -0.01em;
+  /* espaço para os descendentes do p e do g não invadirem a linha de baixo */
+  padding-bottom: 0.2em;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--vinho);
+}
+
+.footer__base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-top: clamp(16px, 2vw, 28px);
+  padding-block: 22px 30px;
+  border-top: 1px solid var(--linha);
+  font-size: 0.8125rem;
+  color: var(--cinza);
+}
+
+/* ---------- responsivo ---------- */
+
+@media (max-width: 1100px) {
+  .evento {
+    grid-template-columns: 8rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      'data tipo acao'
+      'data info acao'
+      'data hora acao';
+    gap: 8px clamp(16px, 3vw, 32px);
+  }
+
+  .evento__data {
+    align-self: start;
+  }
+
+  .andar {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+  }
+
+  .andar__nivel {
+    grid-column: 1 / -1;
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 960px) {
+  .dots {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .nav__menu {
+    display: none;
+  }
+
+  .nav__inner {
+    grid-template-columns: 1fr auto;
+  }
+
+  .nav__toggle {
+    display: inline-block;
+  }
+
+  .hero__raios {
+    display: none;
+  }
+
+  .casa__head,
+  .agenda__head {
+    grid-template-columns: 1fr;
+  }
+
+  .casa__texto,
+  .agenda__nota {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    min-height: 600px;
+  }
+
+  .hero__cantos {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .hero__cantos .canto--dir {
+    align-self: flex-end;
+  }
+
+  /* No celular o nome fica na área escura, logo abaixo dos cantos, e o busto embaixo */
+  .hero__titulo {
+    top: calc(var(--nav-h) + clamp(124px, 15svh, 150px));
+    bottom: auto;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.1em;
+    transform: none;
+    font-size: clamp(2.6rem, 15vw, 5rem);
+  }
+
+  .hero__nome--esq {
+    align-self: flex-start;
+  }
+
+  /* Busto no celular:
+     --busto-tamanho  1.45 = os ombros saem só um pouco pelas bordas
+     --busto-celula   pontos menores que no desktop (7), para o rosto ter detalhe
+     bottom: 0        prende a caixa na base do hero
+     height           no máximo 60% do hero, para não subir por cima do nome em telas baixas */
+  .hero__busto {
+    --busto-tamanho: 1.45;
+    --busto-celula: 5;
+    /* Na foto a cabeça fica 5% à direita do centro; isto a centraliza na tela */
+    --busto-x: -4.4%;
+    bottom: 0;
+    height: min(calc((100% - var(--nav-h) - 4px) * var(--busto-tamanho)), 60%);
+  }
+
+  /* ASCII mais fraco, para o busto não se misturar com o brilho vermelho */
+  .hero__bg > .hero__ascii {
+    opacity: 0.5;
+  }
+
+  .andar {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .infos,
+  .footer__cols {
+    grid-template-columns: 1fr;
+  }
+
+  .evento {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'data tipo'
+      'data info'
+      'data hora'
+      'acao acao';
+    align-items: start;
+    gap: 10px 20px;
+  }
+
+  .evento__data {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .evento__acao {
+    justify-self: stretch;
+    margin-top: 6px;
+  }
+
+  .evento__acao .btn {
+    width: 100%;
+  }
+
+  .cardapio__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .cardapio__base {
+    margin-bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .carrossel {
+    overflow-x: auto;
+  }
+}
